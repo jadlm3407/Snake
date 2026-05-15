@@ -110,8 +110,8 @@ public class MovimientoSnake extends JPanel implements ActionListener, KeyListen
         }
         mapa.mapa[snakeRow[0]][snakeCol[0]] = 2;
 
-        repaint();
-        System.out.println(mapa.toString());
+        repaint(); // Vuelvo a pintar el panel
+        System.out.println(mapa.toString()); // Dibujo el mapa en consola
     }
 
     // Dibujamos el mapa segun el mapa de matrices que tenemos
