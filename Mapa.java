@@ -7,30 +7,29 @@ public class Mapa {
         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
         {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
         {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+        {1, 0, 0, 0, 0, 4, 0, 0, 0, 1},
         {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-        {1, 0, 0, 2, 0, 0, 4, 0, 0, 1},
         {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-        {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+        {1, 0, 0, 0, 0, 2, 0, 0, 0, 1},
         {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
         {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
     };
 
-    int[] coordM = {4, 6}; //Coordenadas iniciales de la manzana
+    int[] coordM = {3, 5}; //Coordenadas iniciales de la manzana
 
     Random rand = new Random();
 
-    // Places the apple in a new random empty cell and returns its coordinates
+    // Para poner una manzana nueva en el mapa
     public int[] nuevaManzana() {
-        mapa[coordM[0]][coordM[1]] = 0; // Clear old apple
+        mapa[coordM[0]][coordM[1]] = 0; // Quito la manzana anterior
 
-        // Keep trying until we find an empty cell
+        // Lo intenta hasta que encuentre una casilla vacía
         do {
-            coordM[0] = rand.nextInt(1, 9); // rows 1..8 (avoid walls)
-            coordM[1] = rand.nextInt(1, 9); // cols 1..8
+            coordM[0] = rand.nextInt(1, 9); // fila 1-9
+            coordM[1] = rand.nextInt(1, 9); // columna 1-9
         } while (mapa[coordM[0]][coordM[1]] != 0);
-
-        mapa[coordM[0]][coordM[1]] = 4; // Place new apple
+        mapa[coordM[0]][coordM[1]] = 4; // Pongo la nueva manzana
         return coordM;
     }
 

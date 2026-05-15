@@ -33,8 +33,8 @@ public class MovimientoSnake extends JPanel implements ActionListener, KeyListen
         this.addKeyListener(this);
 
         //Posicion inicial
-        snakeRow[0] = 4;
-        snakeCol[0] = 3;
+        snakeRow[0] = 6;
+        snakeCol[0] = 5;
 
         timer = new Timer(150, this); //Se mueve cada 100ms
         timer.start();
@@ -49,8 +49,8 @@ public class MovimientoSnake extends JPanel implements ActionListener, KeyListen
 
         mapa = new Mapa(); // Reinicio el mapa
 
-        snakeRow[0] = 4;
-        snakeCol[0] = 3;
+        snakeRow[0] = 6;
+        snakeCol[0] = 5;
 
         timer.start();
         repaint();
