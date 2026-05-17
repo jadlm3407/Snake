@@ -5,12 +5,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Random;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
 public class MovimientoSnake extends JPanel implements ActionListener, KeyListener {
 
-    static final int CELL_SIZE = 60;  // Tamaño por celda
+    static int CELL_SIZE = 60;  // Tamaño por celda
     static final int MAX_LENGTH = 100; // Tamaño maximo de serpiente
 
     Mapa mapa = new Mapa();
@@ -22,6 +23,7 @@ public class MovimientoSnake extends JPanel implements ActionListener, KeyListen
     int[] snakeRow = new int[MAX_LENGTH];
     int[] snakeCol = new int[MAX_LENGTH];
     int snakeLength = 1;
+    int tiempoZoom = 0;
 
     int dirRow = 0, dirCol = 0;
     int nextDirRow = 0, nextDirCol = 0;
@@ -36,11 +38,33 @@ public class MovimientoSnake extends JPanel implements ActionListener, KeyListen
         snakeRow[0] = 6;
         snakeCol[0] = 5;
 
-        timer = new Timer(150, this); //Se mueve cada 100ms
+        timer = new Timer(150, this); //Se mueve cada 150ms
         timer.start();
     }
 
+    public void SincronizarSerpiente() {
+        int n = 10; // El tamaño de tu mapa
+
+        // Actualizo todas las posiciones del cuerpo
+        for (int i = 0; i < snakeLength; i++) {
+            int viejaFila = snakeRow[i];
+            int viejaCol = snakeCol[i];
+            
+            snakeRow[i] = viejaCol;          // nueva fila
+            snakeCol[i] = n - 1 - viejaFila; // nueva columna
+        }
+        // Giro la dirección para que no se choque sola
+        int viejaDirRow = dirRow;
+        dirRow = dirCol;
+        dirCol = -viejaDirRow;
+
+        int viejaNextDirRow = nextDirRow;
+        nextDirRow = nextDirCol;
+        nextDirCol = -viejaNextDirRow;
+    }
+
     public void reiniciar() {
+        CELL_SIZE = 60;
         ptos = 0;
         crash = false;
         snakeLength = 1;
@@ -78,12 +102,14 @@ public class MovimientoSnake extends JPanel implements ActionListener, KeyListen
         int cell = mapa.mapa[newRow][newCol];
         if (cell == 1 || cell == 2 || cell == 3) { //Pared o el mismo
             crash = true;
+
+            
             repaint();
             return;
         }
 
         // Para comer la manzana
-        boolean ateApple = (cell == 4);
+        boolean ateApple = (cell == 4 || cell == 5 || cell == 6);
 
         if (ateApple) {
             ptos++;
@@ -92,6 +118,13 @@ public class MovimientoSnake extends JPanel implements ActionListener, KeyListen
         } else {
             // Si no comemos la manzana quitamos la ultima parte de la cola para que se vea como si se mueve
             mapa.mapa[snakeRow[snakeLength - 1]][snakeCol[snakeLength - 1]] = 0;
+        }
+
+        if (cell == 6){
+            Random rand = new Random();
+            CELL_SIZE = rand.nextInt(30,60);
+            tiempoZoom = 33; // Definí que se actualize el mapa cada 150ms 
+            // y quiero hacer que el zoom dure 5 seg --> 5000ms/150ms = 33,3 --> 33
         }
 
         // Movemos las partes para que cada uno tomen la siguiente
@@ -110,6 +143,16 @@ public class MovimientoSnake extends JPanel implements ActionListener, KeyListen
         }
         mapa.mapa[snakeRow[0]][snakeCol[0]] = 2;
 
+        if(cell ==5){ // Si come una manzana especial el mapa se gira
+            mapa.giroMapa();
+            SincronizarSerpiente();
+        }
+
+        if (tiempoZoom == 0){
+            CELL_SIZE = 60;
+        }
+
+        tiempoZoom--;
         repaint(); // Vuelvo a pintar el panel
         System.out.println(mapa.toString()); // Dibujo el mapa en consola
     }
@@ -142,6 +185,14 @@ public class MovimientoSnake extends JPanel implements ActionListener, KeyListen
                     }
                     case 4 -> { // Manzana
                         g.setColor(new Color(220, 50, 50));
+                        g.fillOval(px + 4, py + 4, CELL_SIZE - 8, CELL_SIZE - 8);
+                    }
+                    case 5 -> { // Manzana especial
+                        g.setColor(new Color(253, 191, 0));
+                        g.fillOval(px + 4, py + 4, CELL_SIZE - 8, CELL_SIZE - 8);
+                    }
+                    case 6 -> { // Manzana zoom
+                        g.setColor(new Color(34, 139, 34));
                         g.fillOval(px + 4, py + 4, CELL_SIZE - 8, CELL_SIZE - 8);
                     }
                     default -> { // Vacio
@@ -211,3 +262,4 @@ public class MovimientoSnake extends JPanel implements ActionListener, KeyListen
     @Override public void keyReleased(KeyEvent e) {}
     @Override public void keyTyped(KeyEvent e) {}
 }
+
