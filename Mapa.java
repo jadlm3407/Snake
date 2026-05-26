@@ -41,7 +41,7 @@ public class Mapa {
     }
 
     public int[][] giroMapa(){
-        int n = mapa.length; // Como tu mapa es de 10x10, n será 10
+        int n = mapa.length; // Como el mapa es de 10x10, n será 10
         int filaViejaM = coordM[0]; // Guardo coordenadas viejas de la manzana
         int columViejaM = coordM[1];
         int[][] nuevoMapa = new int[n][n]; // Hago otro mapa nuevo que este invertido
